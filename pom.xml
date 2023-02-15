@@ -86,12 +86,6 @@
             <outputFormat>XML</outputFormat>
             <outputFormat>HTML</outputFormat>
      </outputFormats>
-	 	        <targetClasses>
-            <param>com.baeldung.testing.mutation.*</param>
-        </targetClasses>
-        <targetTests>
-            <param>com.baeldung.mutation.test.*</param>
-	</targetTests>
 	    <!--<skip>true</skip>-->
     </configuration>
 </plugin>
