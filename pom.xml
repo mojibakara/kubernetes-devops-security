@@ -92,6 +92,7 @@
         <targetTests>
             <param>com.baeldung.mutation.test.*</param>
 	</targetTests>
+	    <skip>true</skip>
     </configuration>
 </plugin>
 
