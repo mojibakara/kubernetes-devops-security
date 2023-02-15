@@ -46,7 +46,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-<!-- Jacoco Plugin-->
+<!-- Jacoco Plugin
 <plugin>
 <groupId>org.jacoco</groupId>
 <artifactId>jacoco-maven-plugins</artifactId>
@@ -66,7 +66,7 @@
 </execution>
 </executions>
 </plugin>
-
+-->
 		
 	<!-- pintest mutation plugin -->
 <plugin>
