@@ -62,7 +62,7 @@
 <phase>test</phase>
 <goals>
 <goal>reports</goal>
-<goals>
+</goals>
 </execution>
 </executions>
 </plugin>
