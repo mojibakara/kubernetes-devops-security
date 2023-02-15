@@ -1,0 +1,9 @@
+fileignoreconfig:
+- filename: password.txt
+  checksum: 8a1467f3dc1615e6d7cc621e493b4f22831d5c1a4ed786ef4a2b4c68c48103f5
+- filename: file3
+  checksum: 84476f1695e6d33dbcd2e72f39e3a7312fce60d01e8cdce13c55e20974339215
+- filename: file2
+  checksum: 16e49f933ea29daa75abac390d1b6b54779dca2ed1f04c5db5309b54e2c0006e
+version: ""
+
