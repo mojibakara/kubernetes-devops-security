@@ -12,7 +12,7 @@ scan_score=$(curl -sSX POST --data-binary @"k8s_deployment_service.yaml" https:/
 # scan_score=$(docker run -i kubesec/kubesec:5125c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq .[].socre)
 
     # kubesec scan result proccessing
-    # echo "Scan Score : $scan_socre"
+    echo "Scan Score : $scan_socre"
 
     if [[ "${scan_score}" -ge 5 ]]; then
         echo "Score is $scan_score"
