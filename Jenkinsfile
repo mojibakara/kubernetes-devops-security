@@ -128,6 +128,22 @@ pipeline {
                     )
                 }
               }
-        
+              stage("Integeration Tests - Dev") {
+                steps {
+                    script {
+                        try {
+                            withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh "bash integeration-test.sh"
+                            }
+                        } catch (e) {
+                            withKubeConfig([credentialsId: 'kubeconfig']) {
+                                sh "kubectl -n defualt rollout undo deploy ${deploymentName}"
+                            }
+                            throw e
+                        }
+
+                        }
+                    }
+           }
     }
 }

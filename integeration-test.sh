@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#integeration-test.sh
+
+sleep 5s
+
+PORT=$(kubectl -n defualt get svc ${serviceName} -o json | jq .spec.ports[].nodePort)
+
+echo $PORT
+echo $applicationURL:$PORT/$applicationURL
+
+if [[ ! -z "$PORT" ]];
+then
+    responce=$(curl -s $applicationURL:$PORT$applicationURL)
+    http_code=$(curl -s -o /dev/null -w "%{http_code}" $applicationURL:$PORT$applicationURI)
+
+    if [[ "$responce" == 100 ]];
+        then
+            echo "Increment Test Passed"
+        else
+            echo "Increment Test Failed"
+            exit 1;
+    fi;
+
+    if [[ "$http_code" == 200 ]];
+        then
+            echo "HTTP Status Code Test Passed"
+        else
+            echo "HTTP Status code is not 200"
+            exit 1;
+        fi;
+else
+    echo "The Service Does not have a NodePort"
+    exit 1;
+fi;
