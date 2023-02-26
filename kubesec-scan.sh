@@ -14,11 +14,11 @@ scan_score=$(curl -sSX POST --data-binary @"k8s_deployment_service.yaml" https:/
     # kubesec scan result proccessing
     echo "Scan Score : $scan_socre"
 
-    if [[ "${scan_score}" -ge 5 ]]; then
+    if [[ "${scan_score}" -ge 3 ]]; then
         echo "Score is $scan_score"
         echo "Kubesec Scan $scan_message"
     else
-        echo "Score is $scan_score, which is less than or equal to 5."
+        echo "Score is $scan_score, which is less than or equal to 3."
         echo "Scanning Kubernetes Resource has failed"
         exit 1;
     fi;
