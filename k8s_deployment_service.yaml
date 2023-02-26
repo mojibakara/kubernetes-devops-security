@@ -35,7 +35,7 @@ spec:
   - port: 8686
     protocol: TCP
     targetPort: 8686
-    nodePort: 30316
+    nodePort: 30318
   selector:
     app: devsecops
   type: NodePort
