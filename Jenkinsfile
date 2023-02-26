@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         deploymentName = "devsecops"
-        containerName = " devsecops-container"
+        containerName = "devsecops-container"
         serviceName = "devsecops-svc"
         imageName = "mojibakara/numeric-app:${GIT_COMMIT}"
         applicationURL="http://167.235.65.82"
