@@ -22,21 +22,10 @@ pipeline {
             steps {
                 sh 'mvn test'
             }
-            post {
-              always {
-                junit 'target/surefire-reports/*.xml'
-                jacoco execPattern: 'target/jacoco.exec'
-                }
-            }
         }
         stage ('Mutation Test - PIT') {
             steps {
                 sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-            }
-            post {
-                always {
-                    pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-                }
             }
         }
         stage ('SonarQube - SAST') {
@@ -75,11 +64,6 @@ pipeline {
                          sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
                     }
                 ) 
-            }
-            post {
-                always {
-                    dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                }
             }
         }
         stage ('Docker Build and Push') {
@@ -153,19 +137,23 @@ pipeline {
                     sh 'bash zap.sh'
                 }
             }
-              post {
-                always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
-                    sendNotification currentBuild.result
-                }
-            }
        }     
-       stage('Promحte to PROD?') {
+       stage('Prompte to PROD?') {
         steps {
             timeout(time: 2,unit: 'DAYS') {
                 input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
             }
         }
        } 
+        post {
+            always {
+                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+                junit 'target/surefire-reports/*.xml'
+                jacoco execPattern: 'target/jacoco.exec'
+                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
+                sendNotification currentBuild.result
+                }
+            }
     }
 }
