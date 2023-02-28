@@ -144,8 +144,7 @@ pipeline {
                 input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
             }
         }
-       } 
-    
+       }
        post {
          always {
             junit 'target/surefire-reports/*.xml'
@@ -156,5 +155,5 @@ pipeline {
             sendNotification currentBuild.result
                 }
             }
-}
+    }
 }
