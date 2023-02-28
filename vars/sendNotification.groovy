@@ -10,7 +10,6 @@ if (buildStatus == 'SUCCESS') {
 } else {
     color = '#ec2805'
 }
-echo $buildStatus
 
 def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
 
