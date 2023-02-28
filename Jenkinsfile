@@ -145,8 +145,8 @@ pipeline {
 //             }
 //         }
 //        }
-       steps('test'){
-          steps{
+       stage('test') {
+          steps {
             sh 'exit 0'
         }
     }
