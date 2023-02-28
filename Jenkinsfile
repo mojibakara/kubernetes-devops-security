@@ -147,7 +147,7 @@ pipeline {
 //        }
        stage('test') {
           steps {
-            sh 'exit 0'
+            sh 'exit 1'
         }
     }
     }
