@@ -38,7 +38,7 @@ pipeline {
             //         waitForQualityGate abortPipeline: true
             //     }
             // }
-            sh 'docker run -it -u $UID:$GID -v $PWD:/path checkmarx/kics:ubi8 scan -p /path/assets/queries/dockerfile -o /path -v'
+            sh 'bash checkmarx.sh'
         }
         }
        // stage('Vulnerability Scan -Docker') {
