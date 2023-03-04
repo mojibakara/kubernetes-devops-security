@@ -30,14 +30,15 @@ pipeline {
         }
         stage ('SonarQube - SAST') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+            //     withSonarQubeEnv('SonarQube') {
+            //       sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
+            // }
+            // timeout(time: 4 , unit: 'MINUTES') {
+            //     script {
+            //         waitForQualityGate abortPipeline: true
+            //     }
+            // }
+            sh 'docker run -it -u $UID:$GID -v $PWD:/path checkmarx/kics:ubi8 scan -p /path/assets/queries/dockerfile -o /path -v'
         }
         }
        // stage('Vulnerability Scan -Docker') {
