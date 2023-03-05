@@ -112,10 +112,6 @@ pipeline {
                         sh "bash k8s-deployment-rollout-status.sh"
                         } 
                     }
-                    "timeout" :{
-                       echo "wait 300 second"   
-                       sh "sleep 300"
-                    }
                     )
                 }
               }
