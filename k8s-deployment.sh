@@ -5,6 +5,7 @@
 sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
 sudo cp ./k8s_deployment_service.yaml k8s-devsecops-security-CD/
 cd k8s-devsecops-security-CD/
+git config --global --add safe.directory /var/lib/jenkins/workspace/test2/k8s-devsecops-security-CD
 git add .
 git commit -m "update deploy"
 git push
