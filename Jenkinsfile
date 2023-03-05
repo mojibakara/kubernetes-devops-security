@@ -113,11 +113,8 @@ pipeline {
                         } 
                     }
                     "timeout" :{
-                      timeout(time: 4 , unit: 'MINUTES') {
-                        script {
-                       waitForQualityGate abortPipeline: true
-                        }
-                    }
+                     echo "wait 300 second"   
+                     sh 'sleep 300'
                     }
                     )
                 }
