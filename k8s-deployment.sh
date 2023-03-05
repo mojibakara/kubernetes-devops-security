@@ -4,7 +4,7 @@
 
 sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
 sudo cp ./k8s_deployment_service.yaml /home/ubuntu/k8s-devsecops-security-CD/
-sudo cd /home/ubuntu/k8s-devsecops-security-CD/
+cd /home/ubuntu/k8s-devsecops-security-CD/
 git add .
 git commit -m "update deploy"
 git push
