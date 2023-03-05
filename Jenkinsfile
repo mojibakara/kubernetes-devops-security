@@ -112,13 +112,14 @@ pipeline {
                         sh "bash k8s-deployment-rollout-status.sh"
                         } 
                     }
-                    )
-                    timeout(time: 4 , unit: 'MINUTES') {
-                     script {
+                    "timeout" :{
+                      timeout(time: 4 , unit: 'MINUTES') {
+                        script {
                        waitForQualityGate abortPipeline: true
                         }
                     }
-                    
+                    }
+                    )
                 }
               }
               stage("Integeration Tests - Dev") {
