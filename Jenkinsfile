@@ -113,8 +113,8 @@ pipeline {
                         } 
                     }
                     "timeout" :{
-                     echo "wait 300 second"   
-                     sh 'sleep 300'
+                       echo "wait 300 second"   
+                       sh "sleep 300"
                     }
                     )
                 }
