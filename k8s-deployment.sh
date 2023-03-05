@@ -4,7 +4,7 @@
 
 sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
 cp k8s_deployment_service.yaml ~/k8s-devsecops-security-CD/
-git add.
+git add .
 git commit -m "update deploy"
 git push
 kubectl -n default get deployment ${deploymentName} > /dev/null
