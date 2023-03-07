@@ -43,17 +43,7 @@ pipeline {
         // }
 
 
-       // stage('Vulnerability Scan -Docker') {
-         //   steps {
-           //     sh 'mvn dependency-check:check'
-            //}
-            //post {
-              //  always {
-               //     dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                //}
-           // }
-       // }
-
+       
         //    stage('Vulnerability Scan -Docker') {
         //     steps {
         //         parallel(
@@ -104,22 +94,6 @@ pipeline {
 //        }
                 stage ('kubernetes Deployment - DEV') {
                   steps {
-                    parallel(
-                     "Deployment" :{
-                        withKubeConfig([credentialsId: 'kubeconfig']) {
-                            sh "bash k8s-deployment.sh"
-                        }
-                    },
-                    "RollOut Status" :{
-                      withKubeConfig([credentialsId: 'kubeconfig']) {
-                        sh "bash k8s-deployment-rollout-status.sh"
-                        } 
-                    }
-                    )
-                }
-              }
-              stage("Integeration Tests - Dev") {
-                steps {
                       parallel(
                         "version" :{   
                           withKubeConfig([credentialsId: 'kubeconfig']) {
@@ -132,21 +106,24 @@ pipeline {
                         }
                         }
                       )
-
-                        // try {
-                        //     withKubeConfig([credentialsId: 'kubeconfig']) {
-                        //         sh "bash integeration-test.sh"
-                        //     }
-                        // } catch (e) {
-                        //     withKubeConfig([credentialsId: 'kubeconfig']) {
-                        //         sh "kubectl -n default rollout undo deploy ${deploymentName}"
-                        //     }
-                        //     throw e
-                        // }
+                }
+              }
+        //       stage("Integeration Tests - Dev") {
+        //         steps {
+        //                 try {
+        //                     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                         sh "bash integeration-test.sh"
+        //                     }
+        //                 } catch (e) {
+        //                     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                         sh "kubectl -n default rollout undo deploy ${deploymentName}"
+        //                     }
+        //                     throw e
+        //                 }
 
                         
-                    }
-           }
+        //             }
+        //    }
              stage('OWASP ZAP - DAST') {
                steps {
                  withKubeConfig([credentialsId: 'kubeconfig']) {
