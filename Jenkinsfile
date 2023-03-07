@@ -124,7 +124,7 @@ pipeline {
                           }
                     },
                         "Deployment" :{
-                          withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-CD', keyFileVariable 'SSH-KEY')]) {
+                          withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-CD')]) {
                             sh('git push src/k8s_deployment_service.yaml')
                         }
                         }
