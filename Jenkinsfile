@@ -118,16 +118,29 @@ pipeline {
               stage("Integeration Tests - Dev") {
                 steps {
                     script {
-                        try {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "bash integeration-test.sh"
-                            }
-                        } catch (e) {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "kubectl -n default rollout undo deploy ${deploymentName}"
-                            }
-                            throw e
+                      parallel(
+                        "version" :{   
+                          withKubeConfig([credentialsId: 'kubeconfig']) {
+                            sh "bash k8s-deployment.sh"
+                          }
+                    },
+                        "Deployment" :{
+                          withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-CD', keyFileVariable 'SSH-KEY')]) {
+                            sh('git push src/k8s_deployment_service.yaml')
                         }
+                    }
+                      )
+
+                        // try {
+                        //     withKubeConfig([credentialsId: 'kubeconfig']) {
+                        //         sh "bash integeration-test.sh"
+                        //     }
+                        // } catch (e) {
+                        //     withKubeConfig([credentialsId: 'kubeconfig']) {
+                        //         sh "kubectl -n default rollout undo deploy ${deploymentName}"
+                        //     }
+                        //     throw e
+                        // }
 
                         }
                     }
