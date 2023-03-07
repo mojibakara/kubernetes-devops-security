@@ -84,14 +84,7 @@ pipeline {
         //         )
         //     }
         // }
-//        stage ('kubernetes Deployment - DEV') {
-//                  steps {
-//                      withKubeConfig([credentialsId: 'kubeconfig']) {
-//                     sh "sed -i 's#replace#mojibakara/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-//                      sh "kubectl apply -f k8s_deployment_service.yaml"  
-//                      }
-//                  }
-//        }
+
                 stage ('kubernetes Deployment - DEV') {
                   steps {
                       parallel(
@@ -147,11 +140,11 @@ pipeline {
        post {
              always {
                 sendNotification currentBuild.result
-                junit 'target/surefire-reports/*.xml'
+                // junit 'target/surefire-reports/*.xml'
                 jacoco execPattern: 'target/jacoco.exec'
-                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
+                // pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+                // dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                // publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
                 }
             }
     }
