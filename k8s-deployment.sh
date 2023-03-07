@@ -10,7 +10,7 @@ sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
 # git commit -m "update deploy"
 # git push
 kubectl -n default get deployment ${deploymentName} > /dev/null
-sleep 300
+#sleep 300
 if [[ $? -ne 0 ]]; then
     echo "deployment ${deploymentName} doesnt exist"
    # kubectl -n default apply -f k8s_deployment_service.yaml
