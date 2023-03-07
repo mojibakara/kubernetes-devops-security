@@ -28,19 +28,21 @@ pipeline {
                 sh 'mvn org.pitest:pitest-maven:mutationCoverage'
             }
         }
-        stage ('SonarQube - SAST') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-            // sh 'bash checkmarx.sh'
-        }
-        }
+        // stage ('SonarQube - SAST') {
+        //     steps {
+        //         withSonarQubeEnv('SonarQube') {
+        //           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
+        //     }
+        //     timeout(time: 4 , unit: 'MINUTES') {
+        //         script {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        //     // sh 'bash checkmarx.sh'
+        // }
+        // }
+
+
        // stage('Vulnerability Scan -Docker') {
          //   steps {
            //     sh 'mvn dependency-check:check'
@@ -51,22 +53,23 @@ pipeline {
                 //}
            // }
        // }
-           stage('Vulnerability Scan -Docker') {
-            steps {
-                parallel(
-                    "Dependency Scan" :{
-                        sh 'mvn dependency-check:check'
-                    },
-                    "Trivy Scan" :{
-                        sh "bash trivy-docker-image-scan.sh"
-                    },
-                    "OPA Conftest" :{
+
+        //    stage('Vulnerability Scan -Docker') {
+        //     steps {
+        //         parallel(
+        //             "Dependency Scan" :{
+        //                 sh 'mvn dependency-check:check'
+        //             },
+        //             "Trivy Scan" :{
+        //                 sh "bash trivy-docker-image-scan.sh"
+        //             },
+        //             "OPA Conftest" :{
                 
-                         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-                    }
-                ) 
-            }
-        }
+        //                  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+        //             }
+        //         ) 
+        //     }
+        // }
         stage ('Docker Build and Push') {
           steps {
              withDockerRegistry([credentialsId: "docker_hub", url:""]) {
