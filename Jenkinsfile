@@ -117,7 +117,6 @@ pipeline {
               }
               stage("Integeration Tests - Dev") {
                 steps {
-                    script {
                       parallel(
                         "version" :{   
                           withKubeConfig([credentialsId: 'kubeconfig']) {
@@ -128,7 +127,7 @@ pipeline {
                           withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-CD', keyFileVariable 'SSH-KEY')]) {
                             sh('git push src/k8s_deployment_service.yaml')
                         }
-                    }
+                        }
                       )
 
                         // try {
@@ -142,7 +141,7 @@ pipeline {
                         //     throw e
                         // }
 
-                        }
+                        
                     }
            }
              stage('OWASP ZAP - DAST') {
