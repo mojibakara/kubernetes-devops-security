@@ -3,12 +3,6 @@
 #k8s-deployment.sh
 
 sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
-# sudo cp ./k8s_deployment_service.yaml k8s-devsecops-security-CD/
-# cd k8s-devsecops-security-CD/
-# git config --global --add safe.directory /var/lib/jenkins/workspace/test2/k8s-devsecops-security-CD
-# git add .
-# git commit -m "update deploy"
-# git push
 kubectl -n default get deployment ${deploymentName} > /dev/null
 #sleep 300
 if [[ $? -ne 0 ]]; then
