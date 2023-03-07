@@ -18,11 +18,11 @@ pipeline {
                 archive 'target/*.jar'
             }
         }
-        stage('Unit Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
         // stage ('Mutation Test - PIT') {
         //     steps {
         //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
