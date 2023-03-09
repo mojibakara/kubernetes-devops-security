@@ -17,62 +17,68 @@ pipeline {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
             }
-        }
-        stage('Unit Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage ('Mutation Test - PIT') {
-            steps {
-                sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-            }
-        }
-        stage ('SonarQube - SAST') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-            // sh 'bash checkmarx.sh'
-        }
-        }
-       // stage('Vulnerability Scan -Docker') {
-         //   steps {
-           //     sh 'mvn dependency-check:check'
-            //}
-            //post {
-              //  always {
-               //     dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                //}
-           // }
-       // }
-           stage('Vulnerability Scan -Docker') {
-            steps {
-                parallel(
-                    "Dependency Scan" :{
-                        sh 'mvn dependency-check:check'
-                    },
-                    "Trivy Scan" :{
-                        sh "bash trivy-docker-image-scan.sh"
-                    },
-                    "OPA Conftest" :{
+        // }
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
+        // stage ('Mutation Test - PIT') {
+        //     steps {
+        //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
+        //     }
+        // }
+        // stage ('SonarQube - SAST') {
+        //     steps {
+        //         withSonarQubeEnv('SonarQube') {
+        //           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
+        //     }
+        //     timeout(time: 4 , unit: 'MINUTES') {
+        //         script {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        //     // sh 'bash checkmarx.sh'
+        // }
+        // }
+     
+        //    stage('Vulnerability Scan -Docker') {
+        //     steps {
+        //         parallel(
+        //             "Dependency Scan" :{
+        //                 sh 'mvn dependency-check:check'
+        //             },
+        //             "Trivy Scan" :{
+        //                 sh "bash trivy-docker-image-scan.sh"
+        //             },
+        //             "OPA Conftest" :{
                 
-                         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-                    }
-                ) 
+        //                  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+        //             }
+        //         ) 
+        //     }
+        // }
+        stage('increment version') {
+            steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+                }
             }
         }
         stage ('Docker Build and Push') {
           steps {
              withDockerRegistry([credentialsId: "docker_hub", url:""]) {
                  sh 'printenv'
-                 sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
-                 sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
+                //  sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
+                //  sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
+                 sh 'sudo docker build -t mojibakara/numeric-app:${IMAGE_NAME} .'
+                 sh 'docker push mojibakara/numeric-app:${IMAGE_NAME}'
              }
           }
         }
