@@ -17,7 +17,7 @@ pipeline {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
             }
-        // }
+         }
         // stage('Unit Test') {
         //     steps {
         //         sh 'mvn test'
@@ -77,8 +77,8 @@ pipeline {
                  sh 'printenv'
                 //  sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
                 //  sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
-                 sh 'sudo docker build -t mojibakara/numeric-app:""${IMAGE_NAME}"" .'
-                 sh 'docker push mojibakara/numeric-app:""${IMAGE_NAME}""'
+                 sh 'sudo docker build -t mojibakara/numeric-app:${IMAGE_NAME} .'
+                 sh 'docker push mojibakara/numeric-app:${IMAGE_NAME}'
              }
           }
         }
