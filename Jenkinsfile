@@ -121,6 +121,22 @@ pipeline {
                     )
                 }
               }
+        stage('commit version update') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'git_push_CD', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        // git config here for the first time run
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh 'git config --global user.name "jenkins"'
+
+                        sh "git remote set-url origin https://${USER}:${PASS}@mojibakara/k8s-devsecops-security-CD.git"
+                        sh 'git add .'
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push'
+                    }
+                }
+            }
+
     //           stage("Integeration Tests - Dev") {
     //             steps {
     //                 script {
@@ -145,13 +161,13 @@ pipeline {
     //             }
     //         }
     //    }     
-       stage('Prompte to PROD?') {
-        steps {
-            timeout(time: 2,unit: 'DAYS') {
-                input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
-            }
-        }
-       }
+    //    stage('Prompte to PROD?') {
+    //     steps {
+    //         timeout(time: 2,unit: 'DAYS') {
+    //             input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
+    //         }
+    //     }
+    //    }
     // stage('test') {
     //   steps {
     //         sh 'exit 0'
