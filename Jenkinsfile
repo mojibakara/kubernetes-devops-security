@@ -136,6 +136,7 @@ pipeline {
                     }
                 }
             }
+        }
 
     //           stage("Integeration Tests - Dev") {
     //             steps {
