@@ -130,7 +130,7 @@ pipeline {
                         sh 'git config --global user.name "jenkins"'
 
                         sh "git remote set-url origin https://${USER}:${PASS}@mojibakara/k8s-devsecops-security-CD.git"
-                        sh 'git add .'
+                        sh 'git add ./k8s_deployment_service.yaml'
                         sh 'git commit -m "ci: version bump"'
                         sh 'git push'
                     }
