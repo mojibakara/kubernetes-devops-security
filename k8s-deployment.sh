@@ -4,6 +4,7 @@
 
 sed -i "s#replcae#${imageName}#g" k8s_deployment_service.yaml
 kubectl -n default get deployment ${deploymentName} > /dev/null
+pwd
 #sleep 300
 if [[ $? -ne 0 ]]; then
     echo "deployment ${deploymentName} doesnt exist"
