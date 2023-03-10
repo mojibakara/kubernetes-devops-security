@@ -128,9 +128,9 @@ pipeline {
                         // git config here for the first time run
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
-                        // sh 'git clone https://github.com/mojibakara/k8s-devsecops-security-CD.git'
+                        sh 'git pull https://github.com/mojibakara/k8s-devsecops-security-CD.git'
                         sh "git remote set-url origin https://${USER}:${PASS}@mojibakara/k8s-devsecops-security-CD.git"
-                        sh 'cd /var/lib/jenkins/workspace/test2'
+                        sh 'pwd'
                         sh 'git add -A ./k8s_deployment_service.yaml'
                         sh 'git checkout main'
                         sh 'git commit -m "ci: version bump"'
