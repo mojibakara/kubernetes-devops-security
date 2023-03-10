@@ -132,6 +132,7 @@ pipeline {
                         sh "git remote set-url origin https://${USER}:${PASS}@mojibakara/k8s-devsecops-security-CD.git"
                         sh 'git add ../k8s_deployment_service.yaml'
                         sh 'git commit -m "ci: version bump"'
+                        sh 'git checkout main'
                         sh 'git push'
                     }
                 }
