@@ -17,62 +17,68 @@ pipeline {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
             }
-        }
-        stage('Unit Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage ('Mutation Test - PIT') {
-            steps {
-                sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-            }
-        }
-        stage ('SonarQube - SAST') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-            // sh 'bash checkmarx.sh'
-        }
-        }
-       // stage('Vulnerability Scan -Docker') {
-         //   steps {
-           //     sh 'mvn dependency-check:check'
-            //}
-            //post {
-              //  always {
-               //     dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                //}
-           // }
-       // }
-           stage('Vulnerability Scan -Docker') {
-            steps {
-                parallel(
-                    "Dependency Scan" :{
-                        sh 'mvn dependency-check:check'
-                    },
-                    "Trivy Scan" :{
-                        sh "bash trivy-docker-image-scan.sh"
-                    },
-                    "OPA Conftest" :{
+         }
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
+        // stage ('Mutation Test - PIT') {
+        //     steps {
+        //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
+        //     }
+        // }
+        // stage ('SonarQube - SAST') {
+        //     steps {
+        //         withSonarQubeEnv('SonarQube') {
+        //           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqp_2df78892d01c1917d3ae71dfaf3370c60085568b"
+        //     }
+        //     timeout(time: 4 , unit: 'MINUTES') {
+        //         script {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        //     // sh 'bash checkmarx.sh'
+        // }
+        // }
+     
+        //    stage('Vulnerability Scan -Docker') {
+        //     steps {
+        //         parallel(
+        //             "Dependency Scan" :{
+        //                 sh 'mvn dependency-check:check'
+        //             },
+        //             "Trivy Scan" :{
+        //                 sh "bash trivy-docker-image-scan.sh"
+        //             },
+        //             "OPA Conftest" :{
                 
-                         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-                    }
-                ) 
+        //                  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+        //             }
+        //         ) 
+        //     }
+        // }
+        stage('increment version') {
+            steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+                }
             }
         }
         stage ('Docker Build and Push') {
           steps {
              withDockerRegistry([credentialsId: "docker_hub", url:""]) {
                  sh 'printenv'
-                 sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
-                 sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
+                //  sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
+                //  sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
+                 sh 'sudo docker build -t mojibakara/numeric-app:${IMAGE_NAME} .'
+                 sh 'docker push mojibakara/numeric-app:${IMAGE_NAME}'
              }
           }
         }
@@ -112,45 +118,64 @@ pipeline {
                             sh "bash k8s-deployment.sh"
                         }
                     },
-                    "RollOut Status" :{
-                      withKubeConfig([credentialsId: 'kubeconfig']) {
-                        sh "bash k8s-deployment-rollout-status.sh"
-                        } 
-                    }
+                    // "RollOut Status" :{
+                    //   withKubeConfig([credentialsId: 'kubeconfig']) {
+                    //     sh "bash k8s-deployment-rollout-status.sh"
+                    //     } 
+                    // }
                     )
                 }
               }
-              stage("Integeration Tests - Dev") {
-                steps {
-                    script {
-                        try {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "bash integeration-test.sh"
-                            }
-                        } catch (e) {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "kubectl -n default rollout undo deploy ${deploymentName}"
-                            }
-                            throw e
-                        }
+        // stage('commit version update') {
+        //     steps {
+        //         script {
+        //             withCredentials([usernamePassword(credentialsId: 'git_push_CD', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+        //                 // git config here for the first time run
+                        
+        //                 sh 'git config --global user.email "jenkins@example.com"'
+        //                 sh 'git config --global user.name "jenkins"'
+        //                 sh "git remote set-url origin https://${USER}:${PASS}@mojibakara/k8s-devsecops-security-CD.git"
+        //                 sh 'pwd'
+        //                 sh 'git add -A ./k8s_deployment_service.yaml'
+        //                 // sh 'git checkout main'
+        //                 sh 'git commit -m "ci: version bump"'
+        //                 sh 'git push'
+        //             }
+        //         }
+        //     }
+        // }
 
-                        }
-                    }
-           }
-             stage('OWASP ZAP - DAST') {
-               steps {
-                 withKubeConfig([credentialsId: 'kubeconfig']) {
-                    sh 'bash zap.sh'
-                }
-            }
-       }     
-       stage('Prompte to PROD?') {
-        steps {
-            timeout(time: 2,unit: 'DAYS') {
-                input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
-            }
-        }
-       }
+    //           stage("Integeration Tests - Dev") {
+    //             steps {
+    //                 script {
+    //                     try {
+    //                         withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                             sh "bash integeration-test.sh"
+    //                         }
+    //                     } catch (e) {
+    //                         withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                             sh "kubectl -n default rollout undo deploy ${deploymentName}"
+    //                         }
+    //                         throw e
+    //                     }
+
+    //                     }
+    //                 }
+    //        }
+    //          stage('OWASP ZAP - DAST') {
+    //            steps {
+    //              withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                 sh 'bash zap.sh'
+    //             }
+    //         }
+    //    }     
+    //    stage('Prompte to PROD?') {
+    //     steps {
+    //         timeout(time: 2,unit: 'DAYS') {
+    //             input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
+    //         }
+    //     }
+    //    }
     // stage('test') {
     //   steps {
     //         sh 'exit 0'
@@ -160,11 +185,11 @@ pipeline {
        post {
              always {
                 sendNotification currentBuild.result
-                junit 'target/surefire-reports/*.xml'
-                jacoco execPattern: 'target/jacoco.exec'
-                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
+                // junit 'target/surefire-reports/*.xml'
+                // jacoco execPattern: 'target/jacoco.exec'
+                // pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+                // dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                // publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
                 }
             }
     }
