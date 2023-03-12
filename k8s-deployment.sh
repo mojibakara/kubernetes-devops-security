@@ -12,5 +12,5 @@ if [[ $? -ne 0 ]]; then
 else
     echo "deployment ${deploymentName} exist"
     echo "image name - ${imageName}"
-    kubectl -n default set image deploy ${deploymentName} ${containerName}=${imageName} --record=true
+   # kubectl -n default set image deploy ${deploymentName} ${containerName}=${imageName} --record=true
 fi;
