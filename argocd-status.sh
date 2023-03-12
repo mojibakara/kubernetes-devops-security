@@ -15,9 +15,9 @@ echo $sync_status
 echo $health_status
 
 if [[ "$sync_status" == "successfully synced (all tasks run)" && "$health_status" == "Healthy" ]]; then
-    echo "Successs"
+    echo "Deployment has been Successsed"
     exit 0;
 else
-    echo "Unsuccess"
+    echo "Deployment has been Unsuccessed"
     exit 1;
 fi;
