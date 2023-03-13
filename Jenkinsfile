@@ -13,17 +13,27 @@ pipeline {
     }
     stages {
         stage('Build Artifacts') {
+                    agent {
+                        label "WNK-02"
+                    }
+            
             steps {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
             }
          }
         stage('Unit Test') {
+                     agent {
+                        label "WNK-02"
+                    }
             steps {
                 sh 'mvn test'
             }
         }
         stage ('Mutation Test - PIT') {
+                      agent {
+                        label "WNK-02"
+                    }
             steps {
                 sh 'mvn org.pitest:pitest-maven:mutationCoverage'
             }
@@ -43,10 +53,6 @@ pipeline {
         }
      
            stage('Vulnerability Scan -Docker') {
-                agent {
-                        label "WNK-02"
-                    }
-            steps {
                 parallel(
                     "Dependency Scan" :{
                         sh 'mvn dependency-check:check'
