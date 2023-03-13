@@ -55,8 +55,8 @@ pipeline {
         }
         }
      
-        //    stage('Vulnerability Scan -Docker') {
-        //     steps {
+           stage('Vulnerability Scan -Docker') {
+            steps {
         //         parallel(
         //             "Dependency Scan" :{
         //                 sh 'mvn dependency-check:check'
@@ -69,8 +69,9 @@ pipeline {
         //             //      sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
         //             // }
         //         ) 
-        //     }
-        //    }
+                    sh 'echo bypass'
+            }
+           }
         stage('Increment Build Version') {
             steps {
                 script {
