@@ -13,9 +13,9 @@ pipeline {
     }
     stages {
         stage('Build Artifacts') {
-                    agent {
-                        label "WNK-02"
-                    }
+            agent {
+                label "WNK-02"
+            }
             
             steps {
                 sh 'mvn clean package -DskipTests=true'
@@ -23,17 +23,17 @@ pipeline {
             }
          }
         stage('Unit Test') {
-                     agent {
-                        label "WNK-02"
-                    }
+            agent {
+                label "WNK-02"
+            }
             steps {
                 sh 'mvn test'
             }
         }
         stage ('Mutation Test - PIT') {
-                      agent {
-                        label "WNK-02"
-                    }
+            agent {
+                label "WNK-02"
+            }
             steps {
                 sh 'mvn org.pitest:pitest-maven:mutationCoverage'
             }
