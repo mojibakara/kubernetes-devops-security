@@ -53,6 +53,7 @@ pipeline {
         }
      
            stage('Vulnerability Scan -Docker') {
+            steps {
                 parallel(
                     "Dependency Scan" :{
                         sh 'mvn dependency-check:check'
@@ -66,7 +67,7 @@ pipeline {
                     }
                 ) 
             }
-        
+           }
         stage('Increment Build Version') {
             steps {
                 script {
