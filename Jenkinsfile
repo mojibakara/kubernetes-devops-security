@@ -66,7 +66,7 @@ pipeline {
                     }
                 ) 
             }
-        }
+        
         stage('Increment Build Version') {
             steps {
                 script {
