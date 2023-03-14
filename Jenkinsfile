@@ -69,7 +69,7 @@ pipeline {
         //             //      sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
         //             // }
         //         ) 
-                    sh 'echo bypass'
+                    sh 'echo Done'
             }
            }
         stage('Increment Build Version') {
