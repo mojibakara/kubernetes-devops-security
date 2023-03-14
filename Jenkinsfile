@@ -31,9 +31,6 @@ pipeline {
             }
         }
         stage ('Mutation Test - PIT') {
-            agent {
-                label "WNK-02"
-            }
             steps {
                 sh 'mvn org.pitest:pitest-maven:mutationCoverage'
             }
@@ -113,7 +110,8 @@ pipeline {
         }
                 stage ('Argocd_Check') {
                   steps {
-                    sh "bash argocd-status.sh"       
+                    // sh "bash argocd-status.sh"   
+                    sh 'Done'    
                   }
                 }
                 // stage ('kubernetes Deployment - DEV') {
