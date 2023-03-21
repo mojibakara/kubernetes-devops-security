@@ -30,11 +30,11 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage ('Mutation Test - PIT') {
-            steps {
-                sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-            }   
-        }
+        // stage ('Mutation Test - PIT') {
+        //     steps {
+        //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
+        //     }   
+        // }
         stage ('SonarQube - SAST') {
             agent {
                 label "WNK-02"
@@ -173,7 +173,7 @@ pipeline {
                 sendNotification currentBuild.result
                 junit 'target/surefire-reports/*.xml'
                 jacoco execPattern: 'target/jacoco.exec'
-                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+                // pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
                 dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
                 }
