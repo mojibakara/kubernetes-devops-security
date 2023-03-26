@@ -23,9 +23,9 @@ pipeline {
             }
          }
         stage('Unit Test') {
-            agent {
-                label "WNK-02"
-            }
+            // agent {
+            //     label "WNK-02"
+            // }
             steps {
                 sh 'mvn test'
             }
