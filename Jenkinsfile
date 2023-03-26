@@ -35,22 +35,22 @@ pipeline {
         //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
         //     }   
         // }
-        stage ('SonarQube - SAST') {
-            // agent {
-            //     label "WNK-02"
-            // }
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqa_23a5c394e2ba552fb3799466b595b80b4a39e2d0"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-            // sh 'bash checkmarx.sh'
-        }
-        }
+        // stage ('SonarQube - SAST') {
+        //     // agent {
+        //     //     label "WNK-02"
+        //     // }
+        //     steps {
+        //         withSonarQubeEnv('SonarQube') {
+        //           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000 -Dsonar.login=sqa_23a5c394e2ba552fb3799466b595b80b4a39e2d0"
+        //     }
+        //     timeout(time: 4 , unit: 'MINUTES') {
+        //         script {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        //     // sh 'bash checkmarx.sh'
+        // }
+        // }
      
            stage('Vulnerability Scan -Docker') {
             steps {
