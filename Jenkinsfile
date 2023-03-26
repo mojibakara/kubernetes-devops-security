@@ -53,6 +53,9 @@ pipeline {
         }
      
            stage('Vulnerability Scan -Docker') {
+              agent {
+                label "WNK-02"
+              }
             steps {
                 parallel(
                     "Dependency Scan" :{
