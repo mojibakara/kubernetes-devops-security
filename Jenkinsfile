@@ -71,6 +71,11 @@ pipeline {
                 ) 
                     // sh 'echo Done'
             }
+            post {
+                always {
+                    dependencyCheckPublisher pattern: '/target/dependency-check-report.xml'
+                }
+            }
            }
         stage('Increment Build Version') {
             steps {
@@ -177,7 +182,7 @@ pipeline {
                 junit 'target/surefire-reports/*.xml'
                 jacoco execPattern: 'target/jacoco.exec'
                 pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-                dependencyCheckPublisher pattern: '**/target/dependency-check-report.xml'
+                // dependencyCheckPublisher pattern: '**/target/dependency-check-report.xml'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap-report.html', reportName: 'HTML Report', reportTitles: 'OWAP ZAP Report HTML', useWrapperFileDirectly: true])
                 }
             }
