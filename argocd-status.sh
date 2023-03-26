@@ -2,13 +2,13 @@
 
 #argocd_status.sh
 sleep 300
-output_token=$(curl -k https://167.235.65.82:32263/api/v1/session -d $'{"username":"admin","password":"QYXdF2KS15gZFIJh"}' | cut -d '"' -f4)
+output_token=$(curl -k https://167.235.65.82:31069/api/v1/session -d $'{"username":"admin","password":"QYXdF2KS15gZFIJh"}' | cut -d '"' -f4)
 
-app_sync=$(curl -k https://167.235.65.82:32263/api/v1/applications/myapp/sync -d $'{"username":"admin","password":"QYXdF2KS15gZFIJh"}')
+app_sync=$(curl -k https://167.235.65.82:31069/api/v1/applications/myapp/sync -d $'{"username":"admin","password":"QYXdF2KS15gZFIJh"}')
 
 sleep 120s
-sync_status=$(curl -k https://167.235.65.82:32263/api/v1/applications -H "Authorization: Bearer $output_token" | jq '.["items"][0]["status"]["operationState"]["message"]' | sed 's/"//' | sed 's/"//')
-health_status=$(curl -k https://167.235.65.82:32263/api/v1/applications -H "Authorization: Bearer $output_token" | jq '.["items"][0]["status"]["resources"][0]["health"]["status"]' | sed 's/"//' | sed 's/"//')
+sync_status=$(curl -k https://167.235.65.82:31069/api/v1/applications -H "Authorization: Bearer $output_token" | jq '.["items"][0]["status"]["operationState"]["message"]' | sed 's/"//' | sed 's/"//')
+health_status=$(curl -k https://167.235.65.82:31069/api/v1/applications -H "Authorization: Bearer $output_token" | jq '.["items"][0]["status"]["resources"][0]["health"]["status"]' | sed 's/"//' | sed 's/"//')
 
 echo $output_token
 echo $sync_status
