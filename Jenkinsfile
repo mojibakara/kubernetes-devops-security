@@ -30,11 +30,11 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        // stage ('Mutation Test - PIT') {
-        //     steps {
-        //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-        //     }   
-        // }
+        stage ('Mutation Test - PIT') {
+            steps {
+                sh 'mvn org.pitest:pitest-maven:mutationCoverage'
+            }   
+        }
         // stage ('SonarQube - SAST') {
         //     // agent {
         //     //     label "WNK-02"
