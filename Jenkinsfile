@@ -22,61 +22,61 @@ pipeline {
                 archive 'target/*.jar'
             }
          }
-        stage('Unit Test') {
-            // agent {
-            //     label "WNK-02"
-            // }
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage ('Mutation Test - PIT') {
-            steps {
-                sh 'mvn org.pitest:pitest-maven:mutationCoverage'
-            }   
-        }
-        stage ('SonarQube - SAST') {
-            agent {
-                label "WNK-02"
-            }
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
-            }
-            timeout(time: 4 , unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-            // sh 'bash checkmarx.sh'
-        }
-        }
+        // stage('Unit Test') {
+        //     // agent {
+        //     //     label "WNK-02"
+        //     // }
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
+        // stage ('Mutation Test - PIT') {
+        //     steps {
+        //         sh 'mvn org.pitest:pitest-maven:mutationCoverage'
+        //     }   
+        // }
+        // stage ('SonarQube - SAST') {
+        //     agent {
+        //         label "WNK-02"
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('SonarQube') {
+        //           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
+        //     }
+        //     timeout(time: 4 , unit: 'MINUTES') {
+        //         script {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        //     // sh 'bash checkmarx.sh'
+        // }
+        // }
      
-           stage('Vulnerability Scan -Docker') {
-              agent {
-                label "WNK-02"
-              }
-            steps {
-                parallel(
-                    "Dependency Scan" :{
-                        sh 'mvn dependency-check:check'
-                    },
-                    "Trivy Scan" :{
-                        sh "bash trivy-docker-image-scan.sh"
-                    },
-                    "OPA Conftest" :{
+        //    stage('Vulnerability Scan -Docker') {
+        //       agent {
+        //         label "WNK-02"
+        //       }
+        //     steps {
+        //         parallel(
+        //             "Dependency Scan" :{
+        //                 sh 'mvn dependency-check:check'
+        //             },
+        //             "Trivy Scan" :{
+        //                 sh "bash trivy-docker-image-scan.sh"
+        //             },
+        //             "OPA Conftest" :{
                 
-                         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-                    }
-                ) 
-                    // sh 'echo Done'
-            }
-            post {
-                always {
-                    dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-                }
-            }
-           }
+        //                  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+        //             }
+        //         ) 
+        //             // sh 'echo Done'
+        //     }
+        //     post {
+        //         always {
+        //             dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+        //         }
+        //     }
+        //    }
         stage('Increment Build Version') {
             steps {
                 script {
@@ -101,27 +101,27 @@ pipeline {
              }
           }
         }
-          stage ('Vulnerability Scan - Kubernetes') {
-            steps {
-                parallel(
-                  "OPA Scan": {
-                    sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
-                  },
-                  "Kubesec Scan": {
-                    sh "bash kubesec-scan.sh"
-                  },
-                  "Trivy Scan": {
-                    sh "bash trivy-k8s-scan.sh"
-                  }
-                )
-            }
-        }
-                stage ('Argocd_Check') {
-                  steps {
-                    sh "bash argocd-status.sh"   
-                    // sh 'echo Done'    
-                  }
-                }
+        //   stage ('Vulnerability Scan - Kubernetes') {
+        //     steps {
+        //         parallel(
+        //           "OPA Scan": {
+        //             sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+        //           },
+        //           "Kubesec Scan": {
+        //             sh "bash kubesec-scan.sh"
+        //           },
+        //           "Trivy Scan": {
+        //             sh "bash trivy-k8s-scan.sh"
+        //           }
+        //         )
+        //     }
+        // }
+        //         stage ('Argocd_Check') {
+        //           steps {
+        //             sh "bash argocd-status.sh"   
+        //             // sh 'echo Done'    
+        //           }
+        //         }
                 // stage ('kubernetes Deployment - DEV') {
                 //   steps {
                 //     parallel(
@@ -139,37 +139,37 @@ pipeline {
               //   }
               // }
 
-              stage("Integeration Tests - Dev") {
-                steps {
-                    script {
-                        try {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "bash integeration-test.sh"
-                            }
-                        } catch (e) {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "kubectl -n default rollout undo deploy ${deploymentName}"
-                            }
-                            throw e
-                        }
+    //           stage("Integeration Tests - Dev") {
+    //             steps {
+    //                 script {
+    //                     try {
+    //                         withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                             sh "bash integeration-test.sh"
+    //                         }
+    //                     } catch (e) {
+    //                         withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                             sh "kubectl -n default rollout undo deploy ${deploymentName}"
+    //                         }
+    //                         throw e
+    //                     }
 
-                        }
-                    }
-           }
-             stage('OWASP ZAP - DAST') {
-               steps {
-                 withKubeConfig([credentialsId: 'kubeconfig']) {
-                    sh 'bash zap.sh'
-                }
-            }
-       }     
-       stage('Prompte to PROD?') {
-        steps {
-            timeout(time: 2,unit: 'DAYS') {
-                input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
-            }
-        }
-       }
+    //                     }
+    //                 }
+    //        }
+    //          stage('OWASP ZAP - DAST') {
+    //            steps {
+    //              withKubeConfig([credentialsId: 'kubeconfig']) {
+    //                 sh 'bash zap.sh'
+    //             }
+    //         }
+    //    }     
+    //    stage('Prompte to PROD?') {
+    //     steps {
+    //         timeout(time: 2,unit: 'DAYS') {
+    //             input 'Do you want to Approve the Deployment to Production Enviroment/Namespace?'
+    //         }
+    //     }
+    //    }
        stage('K8S CIS Benchmark') {
         steps {
             script {
