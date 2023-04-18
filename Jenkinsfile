@@ -16,7 +16,7 @@ pipeline {
             // agent {
             //     label "WNK-02"
             // }
-            
+            // test
             steps {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
