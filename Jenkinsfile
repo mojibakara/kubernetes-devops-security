@@ -123,22 +123,22 @@ pipeline {
                     // sh 'echo Done'    
                   }
                 }
-                stage ('kubernetes Deployment - DEV') {
-                  steps {
-                    parallel(
-                     "Deployment" :{
-                        withKubeConfig([credentialsId: 'kubeconfig']) {
-                            sh "bash k8s-deployment.sh"
-                        }
-                    },
-                    "RollOut Status" :{
-                      withKubeConfig([credentialsId: 'kubeconfig']) {
-                        sh "bash k8s-deployment-rollout-status.sh"
-                        } 
-                        }
-                    )
-                }
-              }
+            //     stage ('kubernetes Deployment - DEV') {
+            //       steps {
+            //         parallel(
+            //          "Deployment" :{
+            //             withKubeConfig([credentialsId: 'kubeconfig']) {
+            //                 sh "bash k8s-deployment.sh"
+            //             }
+            //         },
+            //         "RollOut Status" :{
+            //           withKubeConfig([credentialsId: 'kubeconfig']) {
+            //             sh "bash k8s-deployment-rollout-status.sh"
+            //             } 
+            //             }
+            //         )
+            //     }
+            //   }
 
               stage("Integeration Tests - Dev") {
                 steps {
