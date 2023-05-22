@@ -2,9 +2,9 @@
 #trivy-k8s-scan
 
 echo $imageName #getting Imgae name env variable
-
-sudo docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 0 --severity LOW,MEDIUM,HIGH --light $imageName
-sudo docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light $imageName
+echo $IMAGE_NAME
+sudo docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 0 --severity LOW,MEDIUM,HIGH --light $IMAGE_NAME
+sudo docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light $IMAGE_NAME
 
     # Trivy Scan result proccesing
     exit_code=$?
