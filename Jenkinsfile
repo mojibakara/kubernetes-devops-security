@@ -97,8 +97,8 @@ pipeline {
                  sh 'printenv'
                 //  sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
                 //  sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
-                 sh 'sudo docker build -t mojibakara/numeric-app:${IMAGE_NAME} .'
-                 sh 'docker push mojibakara/numeric-app:${IMAGE_NAME}'
+                 sh 'sudo docker build -t mojibakara/numeric-app:${imageName} .'
+                 sh 'docker push mojibakara/numeric-app:${imageName}'
              }
           }
         }
