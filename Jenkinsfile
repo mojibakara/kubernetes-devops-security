@@ -16,7 +16,7 @@ pipeline {
             // agent {
             //     label "WNK-02"
             // }
-            
+            // test
             steps {
                 sh 'mvn clean package -DskipTests=true'
                 archive 'target/*.jar'
@@ -59,8 +59,8 @@ pipeline {
             steps {
                 parallel(
                     "Dependency Scan" :{
-                        // sh 'mvn dependency-check:check'
-                        sh 'echo ok'
+                        sh 'mvn dependency-check:check'
+                        // sh 'echo ok'
                     },
                     "Trivy Scan" :{
                         sh "bash trivy-docker-image-scan.sh"
