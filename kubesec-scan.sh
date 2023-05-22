@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #kubesec-scan.sh
 #using kubesec v2 api
