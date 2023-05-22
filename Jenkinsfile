@@ -36,9 +36,9 @@ pipeline {
             }   
         }
         stage ('SonarQube - SAST') {
-            agent {
-                label "WNK-02"
-            }
+            // agent {
+            //     label "WNK-02"
+            // }
             steps {
                 withSonarQubeEnv('SonarQube') {
                   sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
@@ -53,9 +53,9 @@ pipeline {
         }
      
            stage('Vulnerability Scan -Docker') {
-              agent {
-                label "WNK-02"
-              }
+            //   agent {
+            //     label "WNK-02"
+            //   }
             steps {
                 parallel(
                     "Dependency Scan" :{
@@ -123,22 +123,22 @@ pipeline {
                     // sh 'echo Done'    
                   }
                 }
-                stage ('kubernetes Deployment - DEV') {
-                  steps {
-                    parallel(
-                     "Deployment" :{
-                        withKubeConfig([credentialsId: 'kubeconfig']) {
-                            sh "bash k8s-deployment.sh"
-                        }
-                    },
-                    "RollOut Status" :{
-                      withKubeConfig([credentialsId: 'kubeconfig']) {
-                        sh "bash k8s-deployment-rollout-status.sh"
-                        } 
-                        }
-                    )
-                }
-              }
+            //     stage ('kubernetes Deployment - DEV') {
+            //       steps {
+            //         parallel(
+            //          "Deployment" :{
+            //             withKubeConfig([credentialsId: 'kubeconfig']) {
+            //                 sh "bash k8s-deployment.sh"
+            //             }
+            //         },
+            //         "RollOut Status" :{
+            //           withKubeConfig([credentialsId: 'kubeconfig']) {
+            //             sh "bash k8s-deployment-rollout-status.sh"
+            //             } 
+            //             }
+            //         )
+            //     }
+            //   }
 
               stage("Integeration Tests - Dev") {
                 steps {
