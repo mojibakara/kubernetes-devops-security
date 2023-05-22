@@ -7,7 +7,7 @@ pipeline {
         deploymentName = "devsecops"
         containerName = "devsecops-container"
         serviceName = "devsecops-svc"
-        imageName = "mojibakara/numeric-app:${GIT_COMMIT}"
+        imageName = "mojibakara/numeric-app:${IMAGE_NAME}"
         applicationURL="http://167.235.65.82"
         applicationURI="/compare/99"
     }
@@ -97,8 +97,8 @@ pipeline {
                  sh 'printenv'
                 //  sh 'sudo docker build -t mojibakara/numeric-app:""$GIT_COMMIT"" .'
                 //  sh 'docker push mojibakara/numeric-app:""$GIT_COMMIT""'
-                 sh 'sudo docker build -t mojibakara/numeric-app:${imageName} .'
-                 sh 'docker push mojibakara/numeric-app:${imageName}'
+                 sh 'sudo docker build -t mojibakara/numeric-app:${IMAGE_NAME} .'
+                 sh 'docker push mojibakara/numeric-app:${IMAGE_NAME}'
              }
           }
         }
