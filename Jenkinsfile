@@ -41,7 +41,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://94.130.228.70:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
+                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://94.130.228.70:9000  -Dsonar.login=sqa_a5db7ebc6a6f5a07f1a3747931a72375e950286b"
             }
             timeout(time: 4 , unit: 'MINUTES') {
                 script {
