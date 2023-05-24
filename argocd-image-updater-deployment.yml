@@ -67,7 +67,7 @@ metadata:
 data:
   applications_api: argocd
   # The address of Argo CD API endpoint - defaults to argocd-server.argocd
-  argocd.server_addr: 167.235.65.82:32263
+  argocd.server_addr: 94.130.228.70:30176
   # Whether to use GRPC-web protocol instead of GRPC over HTTP/2
   argocd.grpc_web: "true"
   # Whether to ignore invalid TLS cert from Argo CD API endpoint

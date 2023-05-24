@@ -8,7 +8,7 @@ pipeline {
         containerName = "devsecops-container"
         serviceName = "devsecops-svc"
         imageName = "mojibakara/numeric-app::${GIT_COMMIT}"
-        applicationURL="http://167.235.65.82"
+        applicationURL="http://94.130.228.70"
         applicationURI="/compare/99"
     }
     stages {
@@ -41,7 +41,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('SonarQube') {
-                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://167.235.65.82:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
+                  sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://94.130.228.70:9000  -Dsonar.login=sqa_d73c1d8047f3ced1992fb6adf912b6cb39c25858"
             }
             timeout(time: 4 , unit: 'MINUTES') {
                 script {
