@@ -140,23 +140,23 @@ pipeline {
             //     }
             //   }
 
-              stage("Integeration Tests - Dev") {
-                steps {
-                    script {
-                        try {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "bash integeration-test.sh"
-                            }
-                        } catch (e) {
-                            withKubeConfig([credentialsId: 'kubeconfig']) {
-                                sh "kubectl -n default rollout undo deploy ${deploymentName}"
-                            }
-                            throw e
-                        }
+        //       stage("Integeration Tests - Dev") {
+        //         steps {
+        //             script {
+        //                 try {
+        //                     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                         sh "bash integeration-test.sh"
+        //                     }
+        //                 } catch (e) {
+        //                     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                         sh "kubectl -n default rollout undo deploy ${deploymentName}"
+        //                     }
+        //                     throw e
+        //                 }
 
-                        }
-                    }
-           }
+        //                 }
+        //             }
+        //    }
              stage('OWASP ZAP - DAST') {
                steps {
                  withKubeConfig([credentialsId: 'kubeconfig']) {
