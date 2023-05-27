@@ -52,32 +52,32 @@ pipeline {
         }
         }
      
-        //    stage('Vulnerability Scan -Docker') {
-        //       agent {
-        //         label "MNF-01"
-        //       }
-        //     steps {
-        //         parallel(
-        //             "Dependency Scan" :{
-        //                 sh 'mvn dependency-check:check'
-        //                 // sh 'echo ok'
-        //             },
-        //             "Trivy Scan" :{
-        //                 sh "bash trivy-docker-image-scan.sh"
-        //             },
-        //             "OPA Conftest" :{
+           stage('Vulnerability Scan -Docker') {
+              agent {
+                label "MNF-01"
+              }
+            steps {
+                parallel(
+                    "Dependency Scan" :{
+                        sh 'mvn dependency-check:check'
+                        // sh 'echo ok'
+                    },
+                    "Trivy Scan" :{
+                        sh "bash trivy-docker-image-scan.sh"
+                    },
+                    "OPA Conftest" :{
                 
-        //                  sh 'sudo docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-        //             }
-        //         ) 
-        //             // sh 'echo Done'
-        //     }
-        //     post {
-        //         always {
-        //             dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-        //         }
-        //     }
-        //    }
+                         sh 'sudo docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+                    }
+                ) 
+                    // sh 'echo Done'
+            }
+            post {
+                always {
+                    dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                }
+            }
+           }
         stage('Increment Build Version') {
             steps {
                 script {
