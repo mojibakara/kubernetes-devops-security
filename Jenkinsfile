@@ -67,7 +67,7 @@ pipeline {
                     },
                     "OPA Conftest" :{
                 
-                         sh 'sudo docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+                         sh 'sudo docker run --rm -S -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
                     }
                 ) 
                     // sh 'echo Done'
