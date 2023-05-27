@@ -53,18 +53,18 @@ pipeline {
         }
      
            stage('Vulnerability Scan -Docker') {
-            //   agent {
-            //     label "WNK-02"
-            //   }
+              agent {
+                label "MNF-01"
+              }
             steps {
                 parallel(
                     "Dependency Scan" :{
                         sh 'mvn dependency-check:check'
                         // sh 'echo ok'
                     },
-                    // "Trivy Scan" :{
-                    //     sh "bash trivy-docker-image-scan.sh"
-                    // },
+                    "Trivy Scan" :{
+                        sh "bash trivy-docker-image-scan.sh"
+                    },
                     "OPA Conftest" :{
                 
                          sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
@@ -158,6 +158,9 @@ pipeline {
         //             }
         //    }
              stage('OWASP ZAP - DAST') {
+                agent {
+                label "MNF-01"
+              }
                steps {
                  withKubeConfig([credentialsId: 'kubeconfig']) {
                     sh 'bash zap.sh'
