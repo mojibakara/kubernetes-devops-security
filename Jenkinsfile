@@ -158,9 +158,9 @@ pipeline {
         //             }
         //    }
              stage('OWASP ZAP - DAST') {
-            //     agent {
-            //     label "MNF-01"
-            //   }
+                agent {
+                label "MNF-01"
+              }
                steps {
                  withKubeConfig([credentialsId: 'kubeconfig']) {
                     sh 'bash zap.sh'
