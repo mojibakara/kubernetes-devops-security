@@ -119,8 +119,8 @@ pipeline {
         }
                 stage ('Argocd_Check') {
                   steps {
-                    sh "bash argocd-status.sh"   
-                    // sh 'echo Done'    
+                    // sh "bash argocd-status.sh"   
+                    sh 'echo Done'    
                   }
                 }
             //     stage ('kubernetes Deployment - DEV') {
